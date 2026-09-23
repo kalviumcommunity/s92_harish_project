@@ -4,6 +4,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import './App.css'
 import UserCard from './components/UserCard'
+import EventCard from './components/EventCard'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -22,12 +23,21 @@ function App() {
             Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
           </p>
         </div>
-        
-           <UserCard
+
+        <UserCard
           name="Alex Kim"
           role="Frontend Developer"
           avatarUrl="https://i.pravatar.cc/150?img=3"
         />
+
+        <EventCard
+          title="AI Hackathon 2026"
+          category="Hackathon"
+          department="Computer Science"
+          date="Oct 15, 2026"
+          deadline="Oct 10, 2026"
+        />
+
         <button
           type="button"
           className="counter"

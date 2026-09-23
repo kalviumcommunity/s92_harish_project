@@ -1,0 +1,43 @@
+.event-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 12px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.event-category {
+  display: inline-block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #6366f1;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.event-title {
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+}
+
+.event-department,
+.event-date,
+.event-deadline {
+  font-size: 0.9rem;
+  color: #444;
+  margin: 2px 0;
+}
+
+.event-rsvp-btn {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.event-rsvp-btn:hover {
+  background-color: #4f46e5;
+}
