@@ -35,5 +35,24 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+// Get events filtered by category (read)
+router.get('/category/:category', async (req, res) => {
+  try {
+    const events = await Event.find({ category: req.params.category });
+    res.status(200).json(events);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Get events filtered by department (read)
+router.get('/department/:department', async (req, res) => {
+  try {
+    const events = await Event.find({ department: req.params.department });
+    res.status(200).json(events);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 module.exports = router;
