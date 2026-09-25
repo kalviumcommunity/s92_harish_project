@@ -35,6 +35,7 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
 // Get events filtered by category (read)
 router.get('/category/:category', async (req, res) => {
   try {
@@ -50,6 +51,42 @@ router.get('/department/:department', async (req, res) => {
   try {
     const events = await Event.find({ department: req.params.department });
     res.status(200).json(events);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Update an existing event (write)
+router.put('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      title,
+      description,
+      category,
+      department,
+      eligibility,
+      eventDate,
+      registrationDeadline,
+      organizer,
+      status
+    } = req.body;
+
+    if (!title || !eventDate) {
+      return res.status(400).json({ message: 'title and eventDate are required' });
+    }
+
+    const updatedEvent = await Event.findByIdAndUpdate(
+      id,
+      { title, description, category, department, eligibility, eventDate, registrationDeadline, organizer, status },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedEvent) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+
+    res.status(200).json(updatedEvent);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
