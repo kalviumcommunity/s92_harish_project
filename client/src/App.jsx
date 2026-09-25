@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
@@ -6,8 +6,67 @@ import './App.css'
 import UserCard from './components/UserCard'
 import EventCard from './components/EventCard'
 
+const API_URL = 'http://localhost:5000/api/events'
+
 function App() {
   const [count, setCount] = useState(0)
+  const [events, setEvents] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    fetchEvents()
+  }, [])
+
+  const fetchEvents = async () => {
+    try {
+      setLoading(true)
+      const res = await fetch(API_URL)
+      if (!res.ok) throw new Error('Failed to fetch events')
+      const data = await res.json()
+      setEvents(data)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleUpdate = async (id, updatedData) => {
+    try {
+      const res = await fetch(`${API_URL}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData),
+      })
+      if (!res.ok) {
+        const errData = await res.json()
+        throw new Error(errData.message || 'Failed to update event')
+      }
+      const updatedEvent = await res.json()
+      setEvents((prev) =>
+        prev.map((ev) => (ev._id === id ? updatedEvent : ev))
+      )
+    } catch (err) {
+      alert(err.message)
+    }
+  }
+
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this event?')
+    if (!confirmDelete) return
+
+    try {
+      const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const errData = await res.json()
+        throw new Error(errData.message || 'Failed to delete event')
+      }
+      setEvents((prev) => prev.filter((ev) => ev._id !== id))
+    } catch (err) {
+      alert(err.message)
+    }
+  }
 
   return (
     <>
@@ -30,13 +89,21 @@ function App() {
           avatarUrl="https://i.pravatar.cc/150?img=3"
         />
 
-        <EventCard
-          title="AI Hackathon 2026"
-          category="Hackathon"
-          department="Computer Science"
-          date="Oct 15, 2026"
-          deadline="Oct 10, 2026"
-        />
+        <div className="event-list">
+          {loading && <p>Loading events...</p>}
+          {error && <p style={{ color: 'red' }}>{error}</p>}
+          {!loading && !error && events.length === 0 && <p>No events found.</p>}
+          {!loading &&
+            !error &&
+            events.map((event) => (
+              <EventCard
+                key={event._id}
+                event={event}
+                onUpdate={handleUpdate}
+                onDelete={handleDelete}
+              />
+            ))}
+        </div>
 
         <button
           type="button"
@@ -80,11 +147,7 @@ function App() {
           <ul>
             <li>
               <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
+                <svg className="button-icon" role="presentation" aria-hidden="true">
                   <use href="/icons.svg#github-icon"></use>
                 </svg>
                 GitHub
@@ -92,11 +155,7 @@ function App() {
             </li>
             <li>
               <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
+                <svg className="button-icon" role="presentation" aria-hidden="true">
                   <use href="/icons.svg#discord-icon"></use>
                 </svg>
                 Discord
@@ -104,11 +163,7 @@ function App() {
             </li>
             <li>
               <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
+                <svg className="button-icon" role="presentation" aria-hidden="true">
                   <use href="/icons.svg#x-icon"></use>
                 </svg>
                 X.com
@@ -116,11 +171,7 @@ function App() {
             </li>
             <li>
               <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
+                <svg className="button-icon" role="presentation" aria-hidden="true">
                   <use href="/icons.svg#bluesky-icon"></use>
                 </svg>
                 Bluesky

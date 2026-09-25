@@ -41,3 +41,34 @@
 .event-rsvp-btn:hover {
   background-color: #4f46e5;
 }
+.event-card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.event-edit-btn,
+.event-delete-btn,
+.event-save-btn,
+.event-cancel-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.event-delete-btn {
+  background-color: #e53e3e;
+  color: white;
+}
+
+.event-edit-btn,
+.event-save-btn {
+  background-color: #3182ce;
+  color: white;
+}
+
+.event-cancel-btn {
+  background-color: #a0aec0;
+  color: white;
+}
